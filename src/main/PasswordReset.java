@@ -18,19 +18,19 @@ public class PasswordReset extends MainFrame implements PanelInterface{
 		this.setResetPassPage(new JPanel());
 		JLabel passResetLabel = new JLabel("Password reset");
 		
-		JTextField username = new JTextField(15);
+		JTextField email = new JTextField(15);
 		JButton lookUpUser = new JButton("ユーザー検索");
 		
 		lookUpUser.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("SEARCHING");
-				changePanel(MainFrame.loginPanel.getLoginPanel(), false, this);
+				
 			}
 		});
 		
 		this.getResetPassPage().add(passResetLabel);
-		this.getResetPassPage().add(username);
+		this.getResetPassPage().add(email);
 		this.getResetPassPage().add(lookUpUser);	
 	}
 	

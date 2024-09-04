@@ -5,14 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import database.DatabaseConn;
 import gui.MainFrame;
 import interfaces.PanelInterface;
 
@@ -56,7 +59,18 @@ public class Login extends MainFrame implements PanelInterface{
 						switch (e.getActionCommand()) {
 						case "login":
 							Home homePanel = new Home();
-							changePanel(homePanel.getHomePanel(), true, this);
+							try {
+								ResultSet userData = DatabaseConn.authenticate(username.getText(), new String(password.getPassword()));
+								if (userData != null) {
+									System.out.println(userData);
+									MainFrame.setUserInfo(new UserInfo(userData.getNString("username") ,userData.getLong(1))); 
+									changePanel(homePanel.getHomePanel(), true, this);
+								} else {
+									throw new Exception("ユーザー名またはパスワードに誤差があります！\n再び確認してください。");
+								}
+							} catch (Exception exceptionLogin) {
+								JOptionPane.showMessageDialog(MainFrame.getMainFrame(), exceptionLogin.getMessage());
+							}
 							break;
 						case "register":
 							Register registerPanel = new Register();

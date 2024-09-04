@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import database.DatabaseConn;
 import gui.MainFrame;
 import interfaces.PanelInterface;
 
@@ -23,21 +24,20 @@ public class Register extends MainFrame implements PanelInterface{
 		//Fields
 		JTextField username = new JTextField(15);
 		JPasswordField password = new JPasswordField(15);
+		JTextField email = new JTextField(20);
 		
 		register.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(this);
-				System.out.println(username.getText());
-				System.out.println(password.getPassword().getClass());
-//				DatabaseConn.registerNewUser(username.getText(), password.getPassword());
-//				changePanel(MainFrame.loginPanel.getLoginPanel(), false, this);
-				
+				int response = DatabaseConn.registerNewUser(username.getText(), new String(password.getPassword()), email.getText());
+				if (response==1) changePanel(MainFrame.loginPanel.getLoginPanel(), false, this);
 			}
 		});
 		
 		this.getRegisterPage().add(registerLabel, BorderLayout.NORTH);
 		this.getRegisterPage().add(username);
+		this.getRegisterPage().add(email);
 		this.getRegisterPage().add(password);
 		this.getRegisterPage().add(register);		
 		
