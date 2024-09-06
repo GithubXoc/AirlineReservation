@@ -1,19 +1,24 @@
 package gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
+import main.Home;
 import main.Login;
+import main.Register;
+import main.UserDetail;
 import main.UserInfo;
 
 public class MainFrame extends JFrame {
 	private static JFrame mainFrame;
-	private static JPanel prevPanel;
+	private static String prevPanel = null;
 	private static UserInfo userInfo = null;
 	public static Login loginPanel = new Login();
 	public MainFrame() {
@@ -24,31 +29,55 @@ public class MainFrame extends JFrame {
 		
 	}
 	
-	public void changePanel(JPanel panel, boolean showMenu, Object prevPage) {
+	public void changePanel(JPanel panel, boolean showMenu, String prevPage) {
 		System.out.println(prevPage);
-//		if (prevPage!=null) {
-//			System.out.println(((PanelInterface) prevPage).getPanel());
-//		}
+		MainFrame.setPrevPanel(prevPage);
 		if (showMenu) {
 			JMenuBar menuBar = new JMenuBar();
-			JButton backButton = new JButton("back");
-			JMenu menu = new JMenu("Menu");
-			menu.setHorizontalTextPosition(SwingConstants.CENTER);
-	        menu.setVerticalTextPosition(SwingConstants.BOTTOM);
+			JButton backButton = new JButton("戻る");
+			JMenu user = new JMenu("ユーザー");
 	        menuBar.add(backButton);
-	        menuBar.add(menu);
-	        JMenuItem item = new JMenuItem("Test Item");
-	        menu.add(item);
-	        menu.add(backButton);
+	        menuBar.add(user);
+	        JMenuItem logoutButton = new JMenuItem("ログアウト");
+	        JMenuItem userDetails = new JMenuItem("情報");
+	        logoutButton.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent ev) {
+	            	MainFrame.setUserInfo(null);
+	            	MainFrame.getMainFrame().setJMenuBar(null);
+	            	changeFunction(MainFrame.loginPanel.getLoginPanel());
+	            	
+	            }
+	        });
+	        userDetails.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent ev) {
+	            	UserDetail userDetail = new UserDetail();
+	            	changeFunction(userDetail.getUserDetail());
+	            }
+	        });
+	        backButton.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent ev) {
+	            	System.out.println(MainFrame.getPrevPanel());
+	            	switch (MainFrame.getPrevPanel()) {
+	            	case "register":
+	            		Register register = new Register();
+	            		changeFunction(register.getRegisterPage());
+	            		break;
+	            	case "home":
+	            		Home home = new Home();
+	            		changeFunction(home.getHomePanel());
+	            		break;
+	            	}
+	            }
+	        });
+	        user.add(userDetails);
+	        user.add(logoutButton);
 	        MainFrame.getMainFrame().setJMenuBar(menuBar);
-//			JPanel headerPanel = new JPanel();
-//			UserInfo userInfo = new UserInfo();
-//			JPanel userInfoPanel = userInfo.getUserInfoPanel();
-//			JLabel header = new JLabel("header");
-//			headerPanel.add(header);
-//			panel.add(userInfoPanel, BorderLayout.NORTH);
-//			panel.add(headerPanel, BorderLayout.NORTH);
+	        System.out.println(MainFrame.getUserInfo().toString());
 		}
+		changeFunction(panel);
+	}
+	
+	public void changeFunction(JPanel panel) {
 		MainFrame.getMainFrame().setContentPane(panel);
 		MainFrame.getMainFrame().revalidate();
 		MainFrame.getMainFrame().repaint();
@@ -59,7 +88,7 @@ public class MainFrame extends JFrame {
 		MainFrame.setMainFrame(frame);
 		MainFrame.getMainFrame().setVisible(true);
 		MainFrame.setPrevPanel(null);
-		frame.changePanel(MainFrame.loginPanel.getLoginPanel(), false, null);
+		frame.changePanel(MainFrame.loginPanel.getLoginPanel(), false, "home");
 	}
 
 	public static JFrame getMainFrame() {
@@ -70,11 +99,11 @@ public class MainFrame extends JFrame {
 		MainFrame.mainFrame = mainFrame;
 	}
 
-	public static JPanel getPrevPanel() {
+	public static String getPrevPanel() {
 		return prevPanel;
 	}
 
-	public static void setPrevPanel(JPanel prevPanel) {
+	public static void setPrevPanel(String prevPanel) {
 		MainFrame.prevPanel = prevPanel;
 	}
 

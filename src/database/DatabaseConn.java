@@ -81,7 +81,7 @@ public class DatabaseConn {
 	}
 	
 	//FETCHING QUERY
-	public ResultSet fetchData(String query) {
+	public static ResultSet fetchData(String query) {
 		try {
 			Connection connection = connect();
 			Statement statement = connection.createStatement();
@@ -89,7 +89,8 @@ public class DatabaseConn {
 			resultSet.close();
 			statement.close();
 			connection.close();
-			return resultSet;
+			if (resultSet.next()) return resultSet;
+			else throw new Exception("No records on table");
 			
 		} catch (Exception e) {
 			System.out.println(e);
@@ -111,9 +112,12 @@ public class DatabaseConn {
 				System.out.println(userData.getLong(1));
 				System.out.println(userData.getString("username"));
 				System.out.println(userData.getString("pass"));
+				connection.close();
 				return userData;
+			} else {
+				connection.close();
+				throw new Exception("Error while authentication");
 			}
-			return null;
 		} catch(Exception e) {
 			System.out.println(e);
 			return null;

@@ -31,7 +31,7 @@ public class Register extends MainFrame implements PanelInterface{
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(this);
 				int response = DatabaseConn.registerNewUser(username.getText(), new String(password.getPassword()), email.getText());
-				if (response==1) changePanel(MainFrame.loginPanel.getLoginPanel(), false, this);
+				if (response==1) changePanel(MainFrame.loginPanel.getLoginPanel(), false, "register");
 			}
 		});
 		

@@ -60,11 +60,12 @@ public class Login extends MainFrame implements PanelInterface{
 						case "login":
 							Home homePanel = new Home();
 							try {
+//								changePanel(homePanel.getHomePanel(), true, this);
 								ResultSet userData = DatabaseConn.authenticate(username.getText(), new String(password.getPassword()));
 								if (userData != null) {
 									System.out.println(userData);
-									MainFrame.setUserInfo(new UserInfo(userData.getNString("username") ,userData.getLong(1))); 
-									changePanel(homePanel.getHomePanel(), true, this);
+									MainFrame.setUserInfo(new UserInfo(userData.getString("username") ,userData.getLong(1), userData.getString("email"))); 
+									changePanel(homePanel.getHomePanel(), true, "home");
 								} else {
 									throw new Exception("ユーザー名またはパスワードに誤差があります！\n再び確認してください。");
 								}
@@ -74,11 +75,11 @@ public class Login extends MainFrame implements PanelInterface{
 							break;
 						case "register":
 							Register registerPanel = new Register();
-							changePanel(registerPanel.getRegisterPage(), false, this);
+							changePanel(registerPanel.getRegisterPage(), false, "login");
 							break;
 						case "resetPassword":
 							PasswordReset passwordResetPanel = new PasswordReset();
-							changePanel(passwordResetPanel.getResetPassPage(), false, this);
+							changePanel(passwordResetPanel.getResetPassPage(), false, "login");
 							break;
 						}
 					}
